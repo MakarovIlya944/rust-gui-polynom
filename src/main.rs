@@ -17,6 +17,8 @@ fn main() {
         .unwrap();
 
     let mut modifiers = ModifiersState::default();
+    let mut _x = 0.0;
+    let mut _y = 0.0;
 
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
@@ -40,12 +42,20 @@ fn main() {
                         H => window.set_cursor_visible(modifiers.shift()),
                         _ => (),
                     }
-                }
+                },
+                WindowEvent::CursorMoved{
+                    position,
+                    ..
+                } => {
+                    println!("x:{} y:{}", position.x, position.y);
+                    _x = position.x;
+                    _y = position.y;
+                },
                 WindowEvent::ModifiersChanged(m) => modifiers = m,
                 _ => (),
             },
             Event::DeviceEvent { event, .. } => match event {
-                DeviceEvent::MouseMotion { delta } => println!("mouse moved: {:?}", delta),
+                // DeviceEvent::MouseMotion { delta } => println!("mouse moved: {:?}", delta),
                 DeviceEvent::Button { button, state } => match state {
                     ElementState::Pressed => println!("mouse button {} pressed", button),
                     ElementState::Released => println!("mouse button {} released", button),
