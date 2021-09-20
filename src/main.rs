@@ -1,80 +1,30 @@
-use std::path::Path;
-use winit::{
-    event::{WindowEvent, DeviceEvent, ElementState, Event, KeyboardInput, ModifiersState},
-    event_loop::{ControlFlow, EventLoop},
-    window::{Icon, WindowBuilder},
-};
-mod polynom;
+extern crate piston_window;
+use piston_window::*;
 
 fn main() {
-    let path = concat!(env!("CARGO_MANIFEST_DIR"), "/img/icon.ico");
-    let icon = load_icon(Path::new(path));
+    let title = "Test";
+    let dimensions = [600,400];
 
-    let event_loop = EventLoop::new();
-    let window = WindowBuilder::new()
-        .with_window_icon(Some(icon))
-        .build(&event_loop)
+    let mut window: PistonWindow = WindowSettings::new(
+            title,
+            dimensions
+        )
+        .exit_on_esc(true)
+        .build()
         .unwrap();
+    let mut cursor = [0.0,0.0];
+    window.set_lazy(true);
+    while let Some(e) = window.next() {
+        e.mouse_cursor(|pos| {
+            cursor = pos;
+            println!("Mouse moved '{} {}'", pos[0], pos[1]);
+        });
 
-    let mut modifiers = ModifiersState::default();
-    let mut _x = 0.0;
-    let mut _y = 0.0;
+        window.draw_2d(&e, |c, g, device| {
+            clear([0.0, 0.0, 0.0, 1.0], g);
 
-    event_loop.run(move |event, _, control_flow| {
-        *control_flow = ControlFlow::Wait;
-
-        match event {
-            Event::WindowEvent { event, .. } => match event {
-                WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
-                WindowEvent::KeyboardInput {
-                    input:
-                        KeyboardInput {
-                            state: ElementState::Released,
-                            virtual_keycode: Some(key),
-                            ..
-                        },
-                    ..
-                } => {
-                    use winit::event::VirtualKeyCode::*;
-                    match key {
-                        Escape => *control_flow = ControlFlow::Exit,
-                        G => window.set_cursor_grab(!modifiers.shift()).unwrap(),
-                        H => window.set_cursor_visible(modifiers.shift()),
-                        _ => (),
-                    }
-                },
-                WindowEvent::CursorMoved{
-                    position,
-                    ..
-                } => {
-                    println!("x:{} y:{}", position.x, position.y);
-                    _x = position.x;
-                    _y = position.y;
-                },
-                WindowEvent::ModifiersChanged(m) => modifiers = m,
-                _ => (),
-            },
-            Event::DeviceEvent { event, .. } => match event {
-                // DeviceEvent::MouseMotion { delta } => println!("mouse moved: {:?}", delta),
-                DeviceEvent::Button { button, state } => match state {
-                    ElementState::Pressed => println!("mouse button {} pressed", button),
-                    ElementState::Released => println!("mouse button {} released", button),
-                },
-                _ => (),
-            },
-            _ => (),
-        }
-    });
-}
-
-fn load_icon(path: &Path) -> Icon {
-    let (icon_rgba, icon_width, icon_height) = {
-        let image = image::open(path)
-            .expect("Failed to open icon path")
-            .into_rgba8();
-        let (width, height) = image.dimensions();
-        let rgba = image.into_raw();
-        (rgba, width, height)
-    };
-    Icon::from_rgba(icon_rgba, icon_width, icon_height).expect("Failed to open icon")
+            line::Line
+            
+        });
+    }
 }

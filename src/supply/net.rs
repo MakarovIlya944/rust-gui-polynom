@@ -7,6 +7,6 @@ pub struct Line {
     points: Vec<Point>
 }
 
-pub fn name() -> i32 {
+pub fn drawLines() {
     1
 }
