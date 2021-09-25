@@ -1,8 +1,13 @@
-pub struct Point {
+pub struct MyPoint {
    pub x: f32,
    pub y: f32,
 }
 
-pub struct Line {
-    points: Vec<Point>
+pub struct MyLine {
+    pub points: Vec<MyPoint>
+}
+
+pub enum LineViewType {
+    Straight,
+    Lagrange
 }
