@@ -60,6 +60,9 @@ fn main() {
                     else if key == Key::D2 {
                         line_view_type = LineViewType::Lagrange;
                     }
+                    else if key == Key::D3 {
+                        line_view_type = LineViewType::Hermite;
+                    }
                 },
                 Button::Mouse(button) => {
                     println!("Released mouse button '{:?}'", button);
@@ -100,6 +103,7 @@ fn main() {
             match line_view_type {
                 LineViewType::Straight => draw_straight(&main_line, c.transform, g),
                 LineViewType::Lagrange => draw_lagrange(&main_line, c.transform, g),
+                LineViewType::Hermite => draw_hermite(&main_line, c.transform, g),
             }
 
             // Draw nodes of line
@@ -125,12 +129,5 @@ fn main() {
             // Update glyphs before rendering.
             glyphs.factory.encoder.flush(device);
         });
-    }
-}
-
-fn cast_enum(view_type: &LineViewType) -> &'static str {
-    match view_type {
-        LineViewType::Straight => return "Straight",
-        LineViewType::Lagrange => return "Lagrange",
     }
 }

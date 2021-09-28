@@ -3,6 +3,18 @@ use piston_window::*;
 static LINE_COLOR:[f32; 4] = [0.0, 1., 0.0, 1.0];
 static LINE_RADIUS:f64 = 1.;
 
+pub fn draw_hermite<G: Graphics>(points: &Vec<[f64; 2]>, transform: [[f64; 3]; 2], g: &mut G) {
+    let l = points.len();
+    if l > 1 {
+        for _i in 1..=l-1 {
+            line(LINE_COLOR,
+                LINE_RADIUS,
+                [points[_i-1][0], points[_i-1][1], points[_i][0], points[_i][1]],
+                transform, g);
+        }
+    }
+}
+
 pub fn draw_straight<G: Graphics>(points: &Vec<[f64; 2]>, transform: [[f64; 3]; 2], g: &mut G) {
     let l = points.len();
     if l > 1 {
