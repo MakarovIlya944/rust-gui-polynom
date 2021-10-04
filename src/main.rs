@@ -25,7 +25,7 @@ fn main() {
     let texty = 20.0;
     let text_font_size = 16;
     let ox = HEIGHT / 2.;
-    
+    let mut auto_order = false;
 
     let mut cursor = [0.0, 0.0];
     let mut main_line:Vec<[f64; 2]> = Vec::new();
@@ -47,13 +47,10 @@ fn main() {
         e.mouse_cursor(|pos| {
             cursor = pos;
         });
-        if let Some(Button::Mouse(button)) = e.press_args() {
-            println!("Pressed mouse button '{:?}'", button);
-        };
         if let Some(button) = e.release_args() {
             match button {
                 Button::Keyboard(key) => {
-                    println!("Released keyboard key '{:?}'", key);
+                    // println!("Released keyboard key '{:?}'", key);
                     if key == Key::D1 {
                         line_view_type = LineViewType::Straight;
                     }
@@ -63,14 +60,19 @@ fn main() {
                     else if key == Key::D3 {
                         line_view_type = LineViewType::Hermite;
                     }
+                    else if key == Key::Space {
+                        auto_order = !auto_order;
+                    }
                 },
                 Button::Mouse(button) => {
-                    println!("Released mouse button '{:?}'", button);
+                    // println!("Released mouse button '{:?}'", button);
                     if button == MouseButton::Left {
                         main_points.push(cursor);
                         main_line.push(cursor);
-                        main_points.sort_by(|a, b| a[0].partial_cmp(&b[0]).unwrap());
-                        main_line.sort_by(|a, b| a[0].partial_cmp(&b[0]).unwrap());
+                        if auto_order {
+                            main_points.sort_by(|a, b| a[0].partial_cmp(&b[0]).unwrap());
+                            main_line.sort_by(|a, b| a[0].partial_cmp(&b[0]).unwrap());
+                        }
                     }
                     else if button == MouseButton::Right {
                         main_points.pop();

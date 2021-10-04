@@ -2,8 +2,8 @@ extern crate piston_window;
 use piston_window::*;
 static LINE_COLOR:[f32; 4] = [0.0, 1., 0.0, 1.0];
 static LINE_RADIUS:f64 = 1.;
-static LINE_DX:f64 = 10.;
-static LINE_DT:f64 = 0.1;
+static LINE_DX:f64 = 2.;
+static LINE_DT:f64 = 0.01;
 
 pub fn draw_hermite<G: Graphics>(points: &Vec<[f64; 2]>, transform: [[f64; 3]; 2], g: &mut G) {
     // (2*t*t*t - 3*t*t + 1) f0
